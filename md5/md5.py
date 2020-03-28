@@ -4,6 +4,7 @@ hex2binmap = { "0": "0000", "1": "0001", "2": "0010", "3": "0011", "4": "0100", 
 def hex2bin(h, s = ""): return "".join(map(lambda i: hex2binmap[i], hex(h)[2:]))
 def final_hash(hx): return "".join([hx[i-1]+hx[i] for i in range(len(hx)-1, -1, -2)])
 def left_rotate(b, c): return (b << c) | (b >> (32-c))
+def fix_hex_length(hex_string): return hex_string if len(hex_string) == 8 else "0"*(8-len(hex_string)) + hex_string
 def md5(msg):
     t32 = pow(2, 32)
     mod_add = lambda a, b: (a + b) % t32
@@ -28,4 +29,4 @@ def md5(msg):
             F = mod_add(mod_add(mod_add(F, A), K[i]), M[g])
             A, D, C, B = D, C, B, mod_add(B, left_rotate(F, s[i]))
         a0, b0, c0, d0 = mod_add(a0, A), mod_add(b0, B), mod_add(c0, C), mod_add(d0, D)
-    return final_hash(hex(a0)[2:])+final_hash(hex(b0)[2:])+final_hash(hex(c0)[2:])+final_hash(hex(d0)[2:])
+    return final_hash(fix_hex_length(hex(a0)[2:]))+final_hash(fix_hex_length(hex(b0)[2:]))+final_hash(fix_hex_length(hex(c0)[2:]))+final_hash(fix_hex_length(hex(d0)[2:]))
